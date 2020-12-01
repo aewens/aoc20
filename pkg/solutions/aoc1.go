@@ -8,7 +8,7 @@ func init() {
 	Map[1] = Solution1
 }
 
-func product(xs []int) int {
+func Product(xs []int) int {
 	result := 1
 	for _, x := range xs {
 		result = result * x
@@ -55,7 +55,6 @@ func Solution1(lines chan string) {
 		transactions = append(transactions, transaction)
 	}
 
-	Display(1, product(SearchDouble2020(transactions)))
-	Display(2, product(SearchTriple2020(transactions)))
-	DynamicSearch2020([]int{1,2,3,4,5,6}, 2)
+	Display(1, Product(SearchDouble2020(transactions)))
+	Display(2, Product(SearchTriple2020(transactions)))
 }
