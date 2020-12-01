@@ -16,22 +16,22 @@ func product(xs []int) int {
 	return result
 }
 
-func SearchDouble2020(transactions []int) ([]int){
+func SearchDouble2020(transactions []int) []int {
 	for t, transaction := range transactions {
 		for tt, tTransaction := range transactions {
 			if t == tt {
 				continue
 			}
 
-			if transaction + tTransaction == 2020 {
+			if transaction+tTransaction == 2020 {
 				return []int{transaction, tTransaction}
 			}
 		}
 	}
-	return []int{-1,-1}
+	return []int{-1, -1}
 }
 
-func SearchTriple2020(transactions []int) ([]int){
+func SearchTriple2020(transactions []int) []int {
 	for t, transaction := range transactions {
 		for tt, tTransaction := range transactions {
 			for ttt, ttTransaction := range transactions {
@@ -39,7 +39,7 @@ func SearchTriple2020(transactions []int) ([]int){
 					continue
 				}
 
-				if transaction + tTransaction + ttTransaction == 2020 {
+				if transaction+tTransaction+ttTransaction == 2020 {
 					return []int{transaction, tTransaction, ttTransaction}
 				}
 			}
@@ -57,4 +57,5 @@ func Solution1(lines chan string) {
 
 	Display(1, product(SearchDouble2020(transactions)))
 	Display(2, product(SearchTriple2020(transactions)))
+	DynamicSearch2020([]int{1,2,3,4,5,6}, 2)
 }
