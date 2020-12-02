@@ -44,7 +44,7 @@ func ParseEntry(line string) PasswordHistory {
 	}
 }
 
-func CheckPassword(history PasswordHistory) bool {
+func CheckPassword1(history PasswordHistory) bool {
 	seen := make(map[string]int)
 	for _, character := range history.Password {
 		letter := string(character)
@@ -74,6 +74,14 @@ func CheckPassword(history PasswordHistory) bool {
 	return found
 }
 
+func CheckPassword2(history PasswordHistory) bool {
+	letter1 := string(history.Password[history.Policy.Valid.Min-1])
+	letter2 := string(history.Password[history.Policy.Valid.Max-1])
+	check1 := letter1 == history.Policy.Check
+	check2 := letter2 == history.Policy.Check
+	return check1 != check2
+}
+
 func Solution2(lines chan string) {
 	entries := []PasswordHistory{}
 	for line := range lines {
@@ -81,12 +89,18 @@ func Solution2(lines chan string) {
 		entries = append(entries, entry)
 	}
 
-	valid := 0
+	valid1 := 0
+	valid2 := 0
 	for _, entry := range entries {
-		if CheckPassword(entry) {
-			valid = valid + 1
+		if CheckPassword1(entry) {
+			valid1 = valid1 + 1
+		}
+
+		if CheckPassword2(entry) {
+			valid2 = valid2 + 1
 		}
 	}
 
-	Display(1, valid)
+	Display(1, valid1)
+	Display(2, valid2)
 }

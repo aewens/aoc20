@@ -37,15 +37,25 @@ func TestSolution2(t *testing.T) {
 		entries = append(entries, entry)
 	}
 
-	valid := 0
-	expecting := 2
+	valid1 := 0
+	valid2 := 0
+	expecting1 := 2
+	expecting2 := 1
 	for _, entry := range entries {
-		if CheckPassword(entry) {
-			valid = valid + 1
+		if CheckPassword1(entry) {
+			valid1 = valid1 + 1
+		}
+
+		if CheckPassword2(entry) {
+			valid2 = valid2 + 1
 		}
 	}
 
-	if valid != expecting {
-		t.Fatalf("Invalid count: %d", valid)
+	if valid1 != expecting1 {
+		t.Fatalf("Part 1 - Invalid count: %d", valid1)
+	}
+
+	if valid2 != expecting2 {
+		t.Fatalf("Part 2 - Invalid count: %d", valid1)
 	}
 }
