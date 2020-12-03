@@ -8,7 +8,7 @@ func init() {
 	Map[3] = Solution3
 }
 
-type Toboggan struct {
+type Point struct {
 	X int
 	Y int
 }
@@ -17,7 +17,8 @@ type TreeMap struct {
 	Width    int
 	Height   int
 	Pattern  [][]bool
-	Toboggan *Toboggan
+	Toboggan *Point
+	Vector   *Point
 	TreesHit int
 }
 
@@ -26,9 +27,20 @@ func (tm *TreeMap) Init() {
 	tm.Height = len(tm.Pattern)
 }
 
+func (tm *TreeMap) Reset() {
+	tm.TreesHit = 0
+	tm.Toboggan.X = 0
+	tm.Toboggan.Y = 0
+}
+
+func (tm *TreeMap) Upgrade(vector *Point) {
+	tm.Vector = vector
+	tm.Reset()
+}
+
 func (tm *TreeMap) Step() bool {
 	y := tm.Toboggan.Y
-	if y == tm.Height {
+	if y >= tm.Height {
 		return true
 	}
 
@@ -37,8 +49,8 @@ func (tm *TreeMap) Step() bool {
 		tm.TreesHit = tm.TreesHit + 1
 	}
 
-	tm.Toboggan.X = tm.Toboggan.X + 3
-	tm.Toboggan.Y = tm.Toboggan.Y + 1
+	tm.Toboggan.X = tm.Toboggan.X + tm.Vector.X
+	tm.Toboggan.Y = tm.Toboggan.Y + tm.Vector.Y
 	return false
 }
 
@@ -64,7 +76,8 @@ func ParsePattern(treeMap *TreeMap, line string) {
 func Solution3(lines chan string) {
 	treeMap := &TreeMap{
 		Pattern:  [][]bool{},
-		Toboggan: &Toboggan{0, 0},
+		Toboggan: &Point{0, 0},
+		Vector: &Point{3, 1},
 	}
 
 	for line := range lines {
@@ -73,6 +86,21 @@ func Solution3(lines chan string) {
 
 	treeMap.Init()
 	treeMap.Descend()
-
 	Display(1, treeMap.TreesHit)
+
+	hits := treeMap.TreesHit
+	vectors := []*Point{
+		{1, 1},
+		{5, 1},
+		{7, 1},
+		{1, 2},
+	}
+
+	for _, vector := range vectors {
+		treeMap.Upgrade(vector)
+		treeMap.Descend()
+		hits = hits * treeMap.TreesHit
+	}
+
+	Display(2, hits)
 }

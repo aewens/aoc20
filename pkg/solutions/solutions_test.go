@@ -77,7 +77,8 @@ func TestSolution3(t *testing.T) {
 
 	treeMap := &TreeMap{
 		Pattern:  [][]bool{},
-		Toboggan: &Toboggan{0, 0},
+		Toboggan: &Point{0, 0},
+		Vector: &Point{3, 1},
 	}
 
 	for _, line := range lines {
@@ -93,10 +94,33 @@ func TestSolution3(t *testing.T) {
 		t.Fatalf("Day 3 parser is broken: %#v", treeMap)
 	}
 
-	expecting := []int{7}
+	expecting := []int{7, 336}
 	treeMap.Descend()
 
 	if treeMap.TreesHit != expecting[0] {
 		t.Fatalf("Part 1 - Invalid count: %d", treeMap.TreesHit)
+	}
+
+	hits := treeMap.TreesHit
+	vectors := []*Point{
+		{1, 1},
+		{5, 1},
+		{7, 1},
+		{1, 2},
+	}
+
+	shouldBe := []int{2, 3, 4, 2}
+	for v, vector := range vectors {
+		treeMap.Upgrade(vector)
+		treeMap.Descend()
+		hits = hits * treeMap.TreesHit
+
+		if treeMap.TreesHit != shouldBe[v] {
+			t.Fatalf("Part 2a - Invalid count: %d:%d", v, treeMap.TreesHit)
+		}
+	}
+
+	if hits != expecting[1] {
+		t.Fatalf("Part 2b - Invalid count: %d", hits)
 	}
 }
