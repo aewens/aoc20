@@ -59,3 +59,44 @@ func TestSolution2(t *testing.T) {
 		t.Fatalf("Part 2 - Invalid count: %d", valid1)
 	}
 }
+
+func TestSolution3(t *testing.T) {
+	lines := []string{
+		"..##.......",
+		"#...#...#..",
+		".#....#..#.",
+		"..#.#...#.#",
+		".#...##..#.",
+		"..#.##.....",
+		".#.#.#....#",
+		".#........#",
+		"#.##...#...",
+		"#...##....#",
+		".#..#...#.#",
+	}
+
+	treeMap := &TreeMap{
+		Pattern:  [][]bool{},
+		Toboggan: &Toboggan{0, 0},
+	}
+
+	for _, line := range lines {
+		ParsePattern(treeMap, line)
+	}
+
+	treeMap.Init()
+	if len(lines[0]) != treeMap.Width {
+		t.Fatalf("Day 3 parser is broken: %#v", treeMap)
+	}
+
+	if len(lines) != treeMap.Height {
+		t.Fatalf("Day 3 parser is broken: %#v", treeMap)
+	}
+
+	expecting := []int{7}
+	treeMap.Descend()
+
+	if treeMap.TreesHit != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", treeMap.TreesHit)
+	}
+}
