@@ -60,3 +60,7 @@ func FromCSV(source string) []string {
 func Separate(source string, delim string) []string {
 	return strings.Split(source, delim)
 }
+
+func Parameters(source string) []string {
+	return strings.Fields(source)
+}

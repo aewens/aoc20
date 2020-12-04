@@ -27,7 +27,7 @@ func ParseEntry(line string) PasswordHistory {
 	rawHistory := Separate(line, ": ")
 	rawPassword := rawHistory[1]
 
-	rawPolicy := Separate(rawHistory[0], " ")
+	rawPolicy := Parameters(rawHistory[0])
 	rawValid := Separate(rawPolicy[0], "-")
 	check := rawPolicy[1]
 

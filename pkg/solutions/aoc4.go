@@ -108,7 +108,7 @@ func ParsePassports(lines []string) []*Passport {
 			continue
 		}
 
-		fields := Separate(line, " ")
+		fields := Parameters(line)
 		for _, field := range fields {
 			pair := Separate(field, ":")
 			passport.Fields[pair[0]] = pair[1]
