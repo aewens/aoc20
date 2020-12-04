@@ -124,3 +124,40 @@ func TestSolution3(t *testing.T) {
 		t.Fatalf("Part 2b - Invalid count: %d", hits)
 	}
 }
+
+func TestSolution4(t *testing.T) {
+	lines := make(chan string)
+	data := []string{
+		"ecl:gry pid:860033327 eyr:2020 hcl:#fffffd",
+		"byr:1937 iyr:2017 cid:147 hgt:183cm",
+		"",
+		"iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884",
+		"hcl:#cfa07d byr:1929",
+		"",
+		"hcl:#ae17e1 iyr:2013",
+		"eyr:2024",
+		"ecl:brn pid:760753108 byr:1931",
+		"hgt:179cm",
+		"",
+		"hcl:#cfa07d eyr:2025 pid:166559648",
+		"iyr:2011 ecl:brn hgt:59in",
+	}
+	go func() {
+		for _, d := range data {
+			lines <- d
+		}
+		close(lines)
+	}()
+	passports := ParsePassports(lines)
+	valid := 0
+	expecting := 2
+	for _, passport := range passports {
+		if passport.Valid {
+			valid = valid + 1
+		}
+	}
+
+	if valid != expecting {
+		t.Fatalf("Part 1 - Invalid count: %d", valid)
+	}
+}
