@@ -126,7 +126,7 @@ func Solution4(lines chan string) {
 
 	passports := ParsePassports(data)
 
-	valid1 := 1
+	valid1 := 0
 	valid2 := 0
 	for _, passport := range passports {
 		if !passport.Valid {
