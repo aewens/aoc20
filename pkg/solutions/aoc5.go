@@ -98,12 +98,59 @@ func Solution5(lines chan string) {
 	}
 
 	highestId := 0
+	rows := &MinMax{-1, -1}
+	columns := &MinMax{-1, -1}
+	seats := make(map[int]map[int]*Seat)
 	for _, partition := range partitions {
 		seat := SearchSeat(partition)
 		if seat.Id > highestId {
 			highestId = seat.Id
 		}
+
+		seatsRow, ok := seats[seat.Row]
+		if !ok {
+			seats[seat.Row] = make(map[int]*Seat)
+			seatsRow = seats[seat.Row]
+		}
+
+		seatsRow[seat.Column] = seat
+
+		if rows.Min == -1 || seat.Row < rows.Min {
+			rows.Min = seat.Row
+		}
+
+		if rows.Max == -1 || seat.Row > rows.Max {
+			rows.Max = seat.Row
+		}
+
+		if columns.Min == -1 || seat.Column < columns.Min {
+			columns.Min = seat.Column
+		}
+
+		if columns.Max == -1 || seat.Column > columns.Max {
+			columns.Max = seat.Column
+		}
 	}
 
 	Display(1, highestId)
+
+	first := false
+	found := false
+	for y := rows.Min; y <= rows.Max; y++ {
+		for x := columns.Min; x <= columns.Max; x++ {
+			_, ok := seats[y][x]
+			if ok && !first {
+				first = true
+				continue
+			}
+			if !ok && first {
+				Display(2, y * 8 + x)
+				found = true
+				break
+			}
+		}
+		if found {
+			break
+		}
+	}
 }
