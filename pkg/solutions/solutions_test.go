@@ -233,6 +233,28 @@ func TestSolution4(t *testing.T) {
 	}
 
 	if valid2 != len(validPassports) {
-		t.Fatalf("Part 2a - Invalid count: %d", valid2)
+		t.Fatalf("Part 2b - Invalid count: %d", valid2)
+	}
+}
+
+func TestSolution6(t *testing.T) {
+	lines := []string{
+		"FBFBBFFRLR",
+		"BFFFBBFRRR",
+		"FFFBBBFRRR",
+		"BBFFBBFRLL",
+	}
+	expecting := []int{357, 567, 119, 820}
+
+	partitions := []*Partition{}
+	for _, line := range lines {
+		partitions = append(partitions, ParsePartition(line))
+	}
+
+	for p, partition := range partitions {
+		seat := SearchSeat(partition)
+		if seat.Id != expecting[p] {
+			t.Fatalf("Part 1a - Invalid seat - %#v", seat)
+		}
 	}
 }
