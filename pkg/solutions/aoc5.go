@@ -100,11 +100,22 @@ func Solution5(lines chan string) {
 	highestId := 0
 	rows := &MinMax{-1, -1}
 	columns := &MinMax{-1, -1}
+	known := &MinMax{-1, -1}
+	sum := 0
 	seats := make(map[int]map[int]*Seat)
 	for _, partition := range partitions {
 		seat := SearchSeat(partition)
 		if seat.Id > highestId {
 			highestId = seat.Id
+		}
+
+		sum = sum + seat.Id
+		if known.Min == -1 || seat.Id < known.Min {
+			known.Min = seat.Id
+		}
+
+		if known.Max == -1 || seat.Id > known.Max {
+			known.Max = seat.Id
 		}
 
 		seatsRow, ok := seats[seat.Row]
@@ -153,4 +164,8 @@ func Solution5(lines chan string) {
 			break
 		}
 	}
+
+	// fancy arithmetic version of part 2
+	count := known.Max-known.Min+1
+	Display(3, count*(known.Min+known.Max)/2-sum)
 }
