@@ -285,18 +285,26 @@ func TestSolution6(t *testing.T) {
 		if len(line) == 0 {
 			groups = append(groups, group)
 			group = []string{}
+			continue
 		}
 
 		group = append(group, line)
 	}
 
-	count := 0
+	count1 := 0
+	count2 := 0
 	for _, group := range groups {
-		count = count + ParseResponses(group)
+		counts := ParseResponses(group)
+		count1 = count1 + counts[0]
+		count2 = count2 + counts[1]
 	}
 
-	expecting := []int{11}
-	if count != expecting[0] {
-		t.Fatalf("Part 1 - Invalid count: %d", count)
+	expecting := []int{11, 6}
+	if count1 != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", count1)
+	}
+
+	if count2 != expecting[1] {
+		t.Fatalf("Part 2 - Invalid count: %d", count2)
 	}
 }
