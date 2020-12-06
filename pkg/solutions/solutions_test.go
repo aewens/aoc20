@@ -237,7 +237,7 @@ func TestSolution4(t *testing.T) {
 	}
 }
 
-func TestSolution6(t *testing.T) {
+func TestSolution5(t *testing.T) {
 	lines := []string{
 		"FBFBBFFRLR",
 		"BFFFBBFRRR",
@@ -254,7 +254,49 @@ func TestSolution6(t *testing.T) {
 	for p, partition := range partitions {
 		seat := SearchSeat(partition)
 		if seat.Id != expecting[p] {
-			t.Fatalf("Part 1a - Invalid seat - %#v", seat)
+			t.Fatalf("Part 1 - Invalid seat - %#v", seat)
 		}
+	}
+}
+
+func TestSolution6(t *testing.T) {
+	lines := []string{
+		"abc",
+		"",
+		"a",
+		"b",
+		"c",
+		"",
+		"ab",
+		"ac",
+		"",
+		"a",
+		"a",
+		"a",
+		"a",
+		"",
+		"b",
+		"",
+	}
+
+	groups := [][]string{}
+	group := []string{}
+	for _, line := range lines {
+		if len(line) == 0 {
+			groups = append(groups, group)
+			group = []string{}
+		}
+
+		group = append(group, line)
+	}
+
+	count := 0
+	for _, group := range groups {
+		count = count + ParseResponses(group)
+	}
+
+	expecting := []int{11}
+	if count != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", count)
 	}
 }
