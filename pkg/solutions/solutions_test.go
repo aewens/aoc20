@@ -310,28 +310,59 @@ func TestSolution6(t *testing.T) {
 }
 
 func TestSolution7(t *testing.T) {
-	lines := []string{
-		"light red bags contain 1 bright white bag, 2 muted yellow bags.",
-		"dark orange bags contain 3 bright white bags, 4 muted yellow bags.",
-		"bright white bags contain 1 shiny gold bag.",
-		"muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.",
-		"shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.",
-		"dark olive bags contain 3 faded blue bags, 4 dotted black bags.",
-		"vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.",
-		"faded blue bags contain no other bags.",
-		"dotted black bags contain no other bags.",
+	sets := [][]string{
+		{
+			"light red bags contain 1 bright white bag, 2 muted yellow bags.",
+			"dark orange bags contain 3 bright white bags, 4 muted yellow bags.",
+			"bright white bags contain 1 shiny gold bag.",
+			"muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.",
+			"shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.",
+			"dark olive bags contain 3 faded blue bags, 4 dotted black bags.",
+			"vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.",
+			"faded blue bags contain no other bags.",
+			"dotted black bags contain no other bags.",
+		},
+		{
+			
+			"shiny gold bags contain 2 dark red bags.",
+			"dark red bags contain 2 dark orange bags.",
+			"dark orange bags contain 2 dark yellow bags.",
+			"dark yellow bags contain 2 dark green bags.",
+			"dark green bags contain 2 dark blue bags.",
+			"dark blue bags contain 2 dark violet bags.",
+			"dark violet bags contain no other bags.",
+		},
 	}
 
-	bags := make(Bags)
-	for _, line := range lines {
-		ParseBags(bags, line)
+	setBagsUp := []Bags{}
+	setBagsDown := []Bags{}
+	for _, set := range sets {
+		up := make(Bags)
+		down := make(Bags)
+		for _, line := range set {
+			ParseBags(line, up, down)
+		}
+		setBagsUp = append(setBagsUp, up)
+		setBagsDown = append(setBagsDown, down)
 	}
 
-	expecting := []int{4}
+	search := "shiny gold bag"
+
 	seen := make(map[string]bool)
-	ValidParents(bags, "shiny gold bag", seen)
+	ValidParents(setBagsUp[0], search, seen)
 	count1 := len(seen)
-	if count1 != expecting[0] {
+
+	expecting1 := 4
+	if count1 != expecting1 {
 		t.Fatalf("Part 1 - Invalid count: %d", count1)
+	}
+
+	expecting2 := []int{32, 126}
+	for s := range sets {
+		count2 := NeededBags(setBagsDown[s], search, 0)
+
+		if count2 != expecting2[s] {
+			t.Fatalf("Part 2 - Invalid count: %d", count2)
+		}
 	}
 }
