@@ -64,3 +64,7 @@ func Separate(source string, delim string) []string {
 func Parameters(source string) []string {
 	return strings.Fields(source)
 }
+
+func Merge(sources []string) string {
+	return strings.Join(sources, " ")
+}

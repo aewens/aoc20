@@ -308,3 +308,30 @@ func TestSolution6(t *testing.T) {
 		t.Fatalf("Part 2 - Invalid count: %d", count2)
 	}
 }
+
+func TestSolution7(t *testing.T) {
+	lines := []string{
+		"light red bags contain 1 bright white bag, 2 muted yellow bags.",
+		"dark orange bags contain 3 bright white bags, 4 muted yellow bags.",
+		"bright white bags contain 1 shiny gold bag.",
+		"muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.",
+		"shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.",
+		"dark olive bags contain 3 faded blue bags, 4 dotted black bags.",
+		"vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.",
+		"faded blue bags contain no other bags.",
+		"dotted black bags contain no other bags.",
+	}
+
+	bags := make(Bags)
+	for _, line := range lines {
+		ParseBags(bags, line)
+	}
+
+	expecting := []int{4}
+	seen := make(map[string]bool)
+	ValidParents(bags, "shiny gold bag", seen)
+	count1 := len(seen)
+	if count1 != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", count1)
+	}
+}
