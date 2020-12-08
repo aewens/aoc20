@@ -366,3 +366,28 @@ func TestSolution7(t *testing.T) {
 		}
 	}
 }
+
+func TestSolution8(t *testing.T) {
+	lines := []string{
+		"nop +0",
+		"acc +1",
+		"jmp +4",
+		"acc +3",
+		"jmp -3",
+		"acc -99",
+		"acc +1",
+		"jmp -4",
+		"acc +6",
+	}
+
+	console := NewConsole()
+	for _, line := range lines {
+		console.PushMemory(line)
+	}
+
+	value := console.Run()
+	expecting := []int{5}
+	if value != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", value)
+	}
+}
