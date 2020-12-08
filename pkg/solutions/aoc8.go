@@ -30,6 +30,12 @@ func NewConsole() *Console {
 	return &Console{0, 0, []*ConsoleOp{}, make(map[int]bool)}
 }
 
+func (c *Console) Reset() {
+	c.Accumulator = 0
+	c.Position = 0
+	c.Executed = make(map[int]bool)
+}
+
 func (c *Console) PushMemory(line string) {
 	params := Parameters(line)
 
@@ -58,6 +64,10 @@ func (c *Console) PushMemory(line string) {
 }
 
 func (c *Console) Step() bool {
+	if c.Position == len(c.Memory) {
+		return true
+	}
+
 	_, ok := c.Executed[c.Position]
 	if ok {
 		return true
@@ -87,6 +97,29 @@ func (c *Console) Run() int {
 	return c.Accumulator
 }
 
+func (c *Console) Repair() int {
+	for o, op := range c.Memory {
+		if op.Type == acc {
+			continue
+		}
+		if op.Type == nop {
+			c.Memory[o] = &ConsoleOp{jmp, op.Value}
+		} else {
+			c.Memory[o] = &ConsoleOp{nop, op.Value}
+		}
+
+		c.Reset()
+		value := c.Run()
+		if c.Position == len(c.Memory) {
+			return value
+		}
+
+		c.Memory[o] = op
+	}
+
+	return -1
+}
+
 func Solution8(lines chan string) {
 	console := NewConsole()
 	for line := range lines {
@@ -94,4 +127,5 @@ func Solution8(lines chan string) {
 	}
 
 	Display(1, console.Run())
+	Display(2, console.Repair())
 }

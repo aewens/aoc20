@@ -385,9 +385,15 @@ func TestSolution8(t *testing.T) {
 		console.PushMemory(line)
 	}
 
-	value := console.Run()
-	expecting := []int{5}
-	if value != expecting[0] {
-		t.Fatalf("Part 1 - Invalid count: %d", value)
+	expecting := []int{5, 8}
+
+	value1 := console.Run()
+	if value1 != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", value1)
+	}
+
+	value2 := console.Repair()
+	if value2 != expecting[1] {
+		t.Fatalf("Part 2 - Invalid count: %d", value2)
 	}
 }
