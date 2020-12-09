@@ -397,3 +397,39 @@ func TestSolution8(t *testing.T) {
 		t.Fatalf("Part 2 - Invalid count: %d", value2)
 	}
 }
+
+func TestSolution9(t *testing.T) {
+	values := []int{
+		35,
+		20,
+		15,
+		25,
+		47,
+		40,
+		62,
+		55,
+		65,
+		95,
+		102,
+		117,
+		150,
+		182,
+		127,
+		219,
+		299,
+		277,
+		309,
+		576,
+	}
+
+	expecting := []int{127}
+	
+	preamble := []int{}
+	for _, value := range values {
+		buffer, invalid := ParseCipher(preamble, 25, value)
+		preamble = buffer
+		if invalid && value != expecting[0] {
+			t.Fatalf("Part 1 - Invalid result: %d", value)
+		}
+	}
+}
