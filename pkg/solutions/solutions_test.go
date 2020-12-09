@@ -422,14 +422,28 @@ func TestSolution9(t *testing.T) {
 		576,
 	}
 
-	expecting := []int{127}
-	
+	expecting := []int{127, 62}
+
+	result := -1
 	preamble := []int{}
 	for _, value := range values {
-		buffer, invalid := ParseCipher(preamble, 25, value)
+		buffer, invalid := ParseCipher(preamble, 5, value)
 		preamble = buffer
-		if invalid && value != expecting[0] {
-			t.Fatalf("Part 1 - Invalid result: %d", value)
+		if invalid {
+			Display(0, value)
+			if value != expecting[0] {
+				t.Fatalf("Part 1a - Invalid result: %d", value)
+			}
+			result = value
 		}
+	}
+
+	if result == -1 {
+		t.Fatalf("Part 1b - Did not find invalid")
+	}
+
+	weakness := BreakCipher(values, result)
+	if weakness != expecting[1] {
+		t.Fatalf("Part 2 - Invalid result: %d", weakness)
 	}
 }
