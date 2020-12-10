@@ -510,7 +510,7 @@ func TestSolution10(t *testing.T) {
 			t.Fatalf("Part 1 - Invalid value: %d", diffCode)
 		}
 
-		validChains := BuildAllChains(values)
+		validChains := CountAllChains(values)
 		if validChains != expecting2[s] {
 			t.Fatalf("Part 2 - Invalid value: %d", validChains)
 		}

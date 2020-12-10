@@ -84,7 +84,27 @@ func BuildLongestChain(values map[int]bool) int {
 	return diffs[1] * diffs[3]
 }
 
-func BuildAllChains(values map[int]bool) int {
+func FindChains(values map[int]bool, check int, end int, valid int) int {
+	ends := 0
+	for c := 1; c <= 3; c++ {
+		value := check+c
+		_, ok := values[value]
+		if !ok {
+			continue
+		}
+
+		if value == end {
+			ends = ends + 1
+			continue
+		}
+
+		valid = FindChains(values, value, end, valid)
+	}
+
+	return valid + ends
+}
+
+func CountAllChains(values map[int]bool) int {
 	keys := []int{}
 	for key := range values {
 		keys = append(keys, key)
@@ -95,42 +115,7 @@ func BuildAllChains(values map[int]bool) int {
 	builtin := keys[len(keys)-1]+3
 	values[builtin] = true
 
-	diffs := make(map[int]int)
-	diffs[1] = 0
-	diffs[2] = 0
-	diffs[3] = 0
-
-	validLinks := 0
-	links := []int{0}
-	for {
-		newLinks := []int{}
-		if len(links) == 0 {
-			break
-		}
-
-		link := links[0]
-		links = links[1:]
-		for l := 1; l <= 3; l++ {
-			newLink := link+l
-			_, ok := values[newLink]
-			if !ok {
-				continue
-			}
-
-			if newLink == builtin {
-				validLinks = validLinks + 1
-				continue
-			}
-
-			newLinks = append(newLinks, newLink)
-		}
-
-		if len(newLinks) > 0 {
-			links = append(links, newLinks...)
-		}
-	}
-
-	return validLinks
+	return FindChains(values, 0, builtin, 0)
 }
 
 func Solution10(lines chan string) {
@@ -143,6 +128,6 @@ func Solution10(lines chan string) {
 	diffCode := BuildLongestChain(values)
 	Display(1, diffCode)
 
-	validChains := BuildAllChains(values)
+	validChains := CountAllChains(values)
 	Display(2, validChains)
 }
