@@ -430,7 +430,6 @@ func TestSolution9(t *testing.T) {
 		buffer, invalid := ParseCipher(preamble, 5, value)
 		preamble = buffer
 		if invalid {
-			Display(0, value)
 			if value != expecting[0] {
 				t.Fatalf("Part 1a - Invalid result: %d", value)
 			}
@@ -445,5 +444,65 @@ func TestSolution9(t *testing.T) {
 	weakness := BreakCipher(values, result)
 	if weakness != expecting[1] {
 		t.Fatalf("Part 2 - Invalid result: %d", weakness)
+	}
+}
+
+func TestSolution10(t *testing.T) {
+	sets := [][]int{
+		{
+			16,
+			10,
+			15,
+			5,
+			1,
+			11,
+			7,
+			19,
+			6,
+			12,
+			4,
+		},
+		{
+			28,
+			33,
+			18,
+			42,
+			31,
+			14,
+			46,
+			20,
+			48,
+			47,
+			24,
+			23,
+			49,
+			45,
+			19,
+			38,
+			39,
+			11,
+			1,
+			32,
+			25,
+			35,
+			8,
+			17,
+			7,
+			9,
+			4,
+			2,
+			34,
+			10,
+			3,
+		},
+	}
+
+	expecting1 := []int{7*5, 22*10}
+
+	for s, values := range sets {
+		_, diffCode := BuildChain(values)
+		if diffCode != expecting1[s] {
+			t.Fatalf("Part 1 - Invalid value: %d", diffCode)
+		}
 	}
 }
