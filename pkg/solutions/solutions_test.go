@@ -498,11 +498,21 @@ func TestSolution10(t *testing.T) {
 	}
 
 	expecting1 := []int{7*5, 22*10}
+	expecting2 := []int{8, 19208}
 
-	for s, values := range sets {
-		_, diffCode := BuildChain(values)
+	for s, set := range sets {
+		values := make(map[int]bool)
+		for _, value := range set {
+			values[value] = true
+		}
+		diffCode := BuildLongestChain(values)
 		if diffCode != expecting1[s] {
 			t.Fatalf("Part 1 - Invalid value: %d", diffCode)
+		}
+
+		validChains := BuildAllChains(values)
+		if validChains != expecting2[s] {
+			t.Fatalf("Part 2 - Invalid value: %d", validChains)
 		}
 	}
 }
