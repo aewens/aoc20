@@ -125,8 +125,6 @@ func BuildAllChains(values map[int]bool) int {
 			newLinks = append(newLinks, newLink)
 		}
 
-		Display(-1, len(newLinks))
-		Display(-2, validLinks)
 		if len(newLinks) > 0 {
 			links = append(links, newLinks...)
 		}
