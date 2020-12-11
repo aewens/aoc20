@@ -532,6 +532,7 @@ func TestSolution11(t *testing.T) {
 	}
 	game := &GameOfSeats{
 		Seats: make(map[int]map[int]int),
+		Copy: make(map[int]map[int]int),
 	}
 	for _, line := range lines {
 		ParseGame(game, line)
@@ -539,9 +540,15 @@ func TestSolution11(t *testing.T) {
 	game.Height = len(game.Seats)
 	game.Width = len(game.Seats[0])
 
-	expecting := []int{37}
-	count := game.Run()
-	if count != expecting[0] {
-		t.Fatalf("Part 1 - Invalid count: %d", count)
+	expecting := []int{37, 26}
+
+	count1 := game.Run(false)
+	if count1 != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", count1)
+	}
+
+	count2 := game.Run(true)
+	if count2 != expecting[1] {
+		t.Fatalf("Part 2 - Invalid count: %d", count2)
 	}
 }
