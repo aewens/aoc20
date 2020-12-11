@@ -84,24 +84,30 @@ func BuildLongestChain(values map[int]bool) int {
 	return diffs[1] * diffs[3]
 }
 
-func FindChains(values map[int]bool, check int, end int, valid int) int {
-	ends := 0
-	for c := 1; c <= 3; c++ {
-		value := check+c
-		_, ok := values[value]
-		if !ok {
-			continue
-		}
-
-		if value == end {
-			ends = ends + 1
-			continue
-		}
-
-		valid = FindChains(values, value, end, valid)
+func GenLinks(
+		seen map[int]int,
+		values map[int]bool,
+		check int,
+		stop int,
+	) int {
+	cache, skip := seen[check]
+	if skip {
+		return cache
 	}
 
-	return valid + ends
+	counts := 0
+	for c := 1; c <= 3; c++ {
+		value := check-c
+		_, ok := values[value]
+		if !ok || value > stop {
+			continue
+		}
+
+		count := GenLinks(seen, values, value, stop)
+		counts = counts + count
+	}
+	seen[check] = counts
+	return counts
 }
 
 func CountAllChains(values map[int]bool) int {
@@ -113,9 +119,17 @@ func CountAllChains(values map[int]bool) int {
 
 	// Add our built-in adapter
 	builtin := keys[len(keys)-1]+3
+	keys = append(keys, builtin)
 	values[builtin] = true
+	values[0] = true
 
-	return FindChains(values, 0, builtin, 0)
+	seen := make(map[int]int)
+	seen[0] = 1
+	for _, key := range keys {
+		GenLinks(seen, values, key, builtin)
+	}
+
+	return seen[builtin]
 }
 
 func Solution10(lines chan string) {
