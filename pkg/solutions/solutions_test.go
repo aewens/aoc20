@@ -516,3 +516,32 @@ func TestSolution10(t *testing.T) {
 		}
 	}
 }
+
+func TestSolution11(t *testing.T) {
+	lines := []string {
+		"L.LL.LL.LL",
+		"LLLLLLL.LL",
+		"L.L.L..L..",
+		"LLLL.LL.LL",
+		"L.LL.LL.LL",
+		"L.LLLLL.LL",
+		"..L.L.....",
+		"LLLLLLLLLL",
+		"L.LLLLLL.L",
+		"L.LLLLL.LL",
+	}
+	game := &GameOfSeats{
+		Seats: make(map[int]map[int]int),
+	}
+	for _, line := range lines {
+		ParseGame(game, line)
+	}
+	game.Height = len(game.Seats)
+	game.Width = len(game.Seats[0])
+
+	expecting := []int{37}
+	count := game.Run()
+	if count != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", count)
+	}
+}
