@@ -552,3 +552,24 @@ func TestSolution11(t *testing.T) {
 		t.Fatalf("Part 2 - Invalid count: %d", count2)
 	}
 }
+
+func TestSolutions12(t *testing.T) {
+	lines := []string{
+		"F10",
+		"N3",
+		"F7",
+		"R90",
+		"F11",
+	}
+	expecting := []int{25}
+
+	ferry := &Ferry{Direction: 0, X: 0, Y: 0}
+	for _, line := range lines {
+		ParseCourse(ferry, line)
+	}
+
+	distance := ferry.Distance()
+	if distance != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", distance)
+	}
+}
