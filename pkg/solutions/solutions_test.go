@@ -561,15 +561,32 @@ func TestSolutions12(t *testing.T) {
 		"R90",
 		"F11",
 	}
-	expecting := []int{25}
+	expecting := []int{25, 286}
 
-	ferry := &Ferry{Direction: 0, X: 0, Y: 0}
+	ferry := &Ferry{
+		Direction: 0,
+		Position:  &Point{0, 0},
+		Waypoint:  &Point{10, 1},
+	}
+	actions := []*FerryAction{}
 	for _, line := range lines {
-		ParseCourse(ferry, line)
+		action := ParseCourse(ferry, line)
+		actions = append(actions, action)
 	}
 
-	distance := ferry.Distance()
-	if distance != expecting[0] {
-		t.Fatalf("Part 1 - Invalid count: %d", distance)
+	distance1 := ferry.Distance()
+	if distance1 != expecting[0] {
+		t.Fatalf("Part 1 - Invalid count: %d", distance1)
+	}
+
+	ferry.Position.X = 0
+	ferry.Position.Y = 0
+	for _, action := range actions {
+		ferry.Process(action)
+	}
+
+	distance2 := ferry.Distance()
+	if distance2 != expecting[1] {
+		t.Fatalf("Part 2 - Invalid count: %d", distance2)
 	}
 }
