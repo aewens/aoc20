@@ -220,8 +220,6 @@ func TestSolution4(t *testing.T) {
 		invalid := false
 		for key, value := range validPassport.Fields {
 			if !CheckPassportField(key, value) {
-				Display(-1, key)
-				Display(-2, value)
 				invalid = true
 				break
 			}
@@ -596,12 +594,27 @@ func TestSolution13(t *testing.T) {
 		"939",
 		"7,13,x,x,59,x,31,19",
 	}
-	expecting := []int{295}
-	arrival := lines[0]
-	buses := lines[1]
-	earliest := EarliestBus(arrival, buses)
+	expecting1 := []int{295}
 
-	if earliest != expecting[0] {
+	earliest := EarliestBus(lines[0], lines[1])
+	if earliest != expecting1[0] {
 		t.Fatalf("Part 1 - Invalid value: %d", earliest)
 	}
+
+	/*searchs := []string {
+		"17,x,13,19",
+		"67,7,59,61",
+		"67,x,7,59,61",
+		"67,7,x,59,61",
+		"1789,37,47,1889",
+		lines[1],
+	}
+	expecting2 := []int{3417, 754018, 779210, 1261476, 1202161486, 1068781}
+
+	for s, search := range searchs {
+		contest := Contest(search)
+		if contest != expecting2[s] {
+			t.Fatalf("Part 2 - Invalid value for %d: %d", s, contest)
+		}
+	}*/
 }

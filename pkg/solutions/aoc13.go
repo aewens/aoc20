@@ -1,6 +1,9 @@
 package solutions
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/aewens/aoc20/pkg/shared"
 )
 
@@ -32,9 +35,27 @@ func EarliestBus(arrival string, buses string) int {
 	return result
 }
 
+// Chinese Remainder Theorem is nonsense, just going to let Wolfram|Alpha do it
+func Contest(buses string) string {
+	hacks := []string{}
+	for b, bus := range Separate(buses, ",") {
+		if bus == "x" {
+			continue
+		}
+		hack := fmt.Sprintf("(t + %d) mod %s = 0", b, bus)
+		hacks = append(hacks, hack)
+	}
+
+	return strings.Join(hacks, ", ")
+}
+
 func Solution13(lines chan string) {
 	arrival := <-lines
 	buses := <-lines
 	earliest := EarliestBus(arrival, buses)
 	Display(1, earliest)
+
+	contest := Contest(buses)
+	Display(2, "https://www.wolframalpha.com/")
+	Display(2, contest)
 }
