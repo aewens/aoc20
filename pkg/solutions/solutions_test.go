@@ -590,3 +590,18 @@ func TestSolutions12(t *testing.T) {
 		t.Fatalf("Part 2 - Invalid count: %d", distance2)
 	}
 }
+
+func TestSolution13(t *testing.T) {
+	lines := []string{
+		"939",
+		"7,13,x,x,59,x,31,19",
+	}
+	expecting := []int{295}
+	arrival := lines[0]
+	buses := lines[1]
+	earliest := EarliestBus(arrival, buses)
+
+	if earliest != expecting[0] {
+		t.Fatalf("Part 1 - Invalid value: %d", earliest)
+	}
+}
