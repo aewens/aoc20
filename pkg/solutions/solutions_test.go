@@ -601,7 +601,7 @@ func TestSolution13(t *testing.T) {
 		t.Fatalf("Part 1 - Invalid value: %d", earliest)
 	}
 
-	/*searchs := []string {
+	searchs := []string {
 		"17,x,13,19",
 		"67,7,59,61",
 		"67,x,7,59,61",
@@ -612,9 +612,10 @@ func TestSolution13(t *testing.T) {
 	expecting2 := []int{3417, 754018, 779210, 1261476, 1202161486, 1068781}
 
 	for s, search := range searchs {
+		Display(-s-10, search)
 		contest := Contest(search)
 		if contest != expecting2[s] {
 			t.Fatalf("Part 2 - Invalid value for %d: %d", s, contest)
 		}
-	}*/
+	}
 }
