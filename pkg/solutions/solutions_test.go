@@ -620,36 +620,37 @@ func TestSolution13(t *testing.T) {
 }
 
 func TestSolution14(t *testing.T) {
-	sets := [][]string{
-		{
-			"mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X",
-			"mem[8] = 11",
-			"mem[7] = 101",
-			"mem[8] = 0",
-		},
-		{
-			"mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X",
-			"mem[8] = 11",
-			"mem[7] = 101",
-			"mem[8] = 0",
-			"mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0XX",
-			"mem[8] = 11",
-			"mem[7] = 101",
-			"mem[8] = 0",
-		},
+	expecting := []int{165, 208}
+	lines := []string{
+		"mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X",
+		"mem[8] = 11",
+		"mem[7] = 101",
+		"mem[8] = 0",
 	}
-	expecting1 := []int{165, 353}
 
-	for s, lines := range sets {
-		Display(-99, s)
-		docker := NewDocker()
-		for _, line := range lines {
-			docker.Read(line)
-		}
+	docker := NewDocker()
+	for _, line := range lines {
+		docker.Read1(line)
+	}
 
-		sum := docker.Sum()
-		if sum != expecting1[s] {
-			t.Fatalf("Part 1 - Invalid value for %d: %d", s, sum)
-		}
+	sum := docker.Sum()
+	if sum != expecting[0] {
+		t.Fatalf("Part 1 - Invalid value for %d", sum)
+	}
+
+	lines = []string{
+		"mask = 000000000000000000000000000000X1001X",
+		"mem[42] = 100",
+		"mask = 00000000000000000000000000000000X0XX",
+		"mem[26] = 1",
+	}
+	docker = NewDocker()
+	for _, line := range lines {
+		docker.Read2(line)
+	}
+
+	sum = docker.Sum()
+	if sum != expecting[1] {
+		t.Fatalf("Part 2 - Invalid value for %d", sum)
 	}
 }
