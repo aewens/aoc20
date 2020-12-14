@@ -56,8 +56,6 @@ func Contest(buses string) int {
 			break
 		}
 		skip = skip * mod
-		Display(-1, result)
-		Display(-2, skip)
 	}
 
 	return result

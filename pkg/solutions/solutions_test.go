@@ -612,10 +612,44 @@ func TestSolution13(t *testing.T) {
 	expecting2 := []int{3417, 754018, 779210, 1261476, 1202161486, 1068781}
 
 	for s, search := range searchs {
-		Display(-s-10, search)
 		contest := Contest(search)
 		if contest != expecting2[s] {
 			t.Fatalf("Part 2 - Invalid value for %d: %d", s, contest)
+		}
+	}
+}
+
+func TestSolution14(t *testing.T) {
+	sets := [][]string{
+		{
+			"mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X",
+			"mem[8] = 11",
+			"mem[7] = 101",
+			"mem[8] = 0",
+		},
+		{
+			"mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X",
+			"mem[8] = 11",
+			"mem[7] = 101",
+			"mem[8] = 0",
+			"mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0XX",
+			"mem[8] = 11",
+			"mem[7] = 101",
+			"mem[8] = 0",
+		},
+	}
+	expecting1 := []int{165, 353}
+
+	for s, lines := range sets {
+		Display(-99, s)
+		docker := NewDocker()
+		for _, line := range lines {
+			docker.Read(line)
+		}
+
+		sum := docker.Sum()
+		if sum != expecting1[s] {
+			t.Fatalf("Part 1 - Invalid value for %d: %d", s, sum)
 		}
 	}
 }
