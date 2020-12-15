@@ -654,3 +654,24 @@ func TestSolution14(t *testing.T) {
 		t.Fatalf("Part 2 - Invalid value for %d", sum)
 	}
 }
+
+func TestSolution15(t *testing.T) {
+	expecting1 := []int{436,1,10,27,78,438,1836}
+	lines := []string{
+		"0,3,6",
+		"1,3,2",
+		"2,1,3",
+		"1,2,3",
+		"2,3,1",
+		"3,2,1",
+		"3,1,2",
+	}
+
+	for l, line := range lines {
+		game := ParseMemoryGame(line)
+		part1 := game.Run(2020)
+		if part1 != expecting1[l] {
+			t.Fatalf("Part 1 - Invalid value for %d: %d", l, part1)
+		}
+	}
+}
