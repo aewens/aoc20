@@ -28,79 +28,20 @@ func (game *MemoryGame) Next() {
 
 func (game *MemoryGame) Step() {
 	/*
-	T 0
-	L -1
-	S 
-	P
-
-	T 1
-	L 0
-	S -1:1
-	P -1:0
-
-	T 2
-	L 3
-	S -1:1 0:1
-	P -1:0 0:1
-
-	T 3
-	L 6
-	S -1:1 0:1 3:1
-	P -1:0 0:1 3:2
-
-	T 4
-	L 0
-	S -1:1 0:1 3:1 6:1
-	P -1:0 0:1 3:2 6:3
-
-	T 5
-	L 3 (4-1)
-	S -1:1 0:1 3:1 6:1
-	P -1:0 0:4 3:2 6:3
-
-	T 6
-	L 3 (5-2)
-	S -1:1 0:1 3:1 6:1
-	P -1:0 0:4 3:5 6:3
-
-	T 7
-	L 1 (6-5)
-	S -1:1 0:1 3:1 6:1
-	P -1:0 0:4 3:6 6:3
-
-	T 8
-	L 0
-	S -1:1 0:1 3:1 6:1 1:1
-	P -1:0 0:4 3:6 6:3
-
-	T 9
-	L 4 (8-4)
-	S -1:1 0:1 3:1 6:1 1:1
-	P -1:0 0:4 3:6 6:3 1:8
-
-	T 10
-	L 0
-	S -1:1 0:1 3:1 6:1 1:1 4:1
-	P -1:0 0:4 3:6 6:3 1:8
+		The trick here to only using map[int]int is that the last turn is always
+		the previous turn, so you only need to retain the 2nd to last turn
 	*/
+
 	game.Next()
-	//Display(-1, game.Turn)
-	//Display(-2, game.Last)
 	turn, ok := game.Seen[game.Last]
 	if !ok {
 		game.Seen[game.Last] = game.Turn-1
 		game.Last = 0
-		//Display(-3, game.Last)
-		//Display(-4, game.Seen)
-		//Display(-5, game.Prev)
 		return
 	}
 
 	game.Seen[game.Last] = game.Turn-1
 	game.Last = (game.Turn-1)-turn
-	//Display(-3, game.Last)
-	//Display(-4, game.Seen)
-	//Display(-5, game.Prev)
 }
 
 func (game *MemoryGame) Run(stop int) int {
@@ -109,7 +50,6 @@ func (game *MemoryGame) Run(stop int) int {
 			break
 		}
 		game.Step()
-		//Display(-9, "----")
 	}
 	return game.Last
 }
@@ -134,3 +74,49 @@ func Solution15(lines chan string) {
 	part2 := game.Run(30000000)
 	Display(2, part2)
 }
+
+/*
+T 0
+L -1 (init)
+S 
+
+T 1
+L 0 (load)
+S -1:0
+
+T 2
+L 3 (load)
+S -1:0 0:1
+
+T 3
+L 6 (load)
+S -1:0 0:1 3:2
+
+T 4
+L 0 (new)
+S -1:0 0:1 3:2 6:3
+
+T 5
+L 3 (4-1)
+S -1:0 0:4 3:2 6:3
+
+T 6
+L 3 (5-2)
+S -1:0 0:4 3:5 6:3
+
+T 7
+L 1 (6-5)
+S -1:0 0:4 3:6 6:3
+
+T 8
+L 0 (new)
+S -1:0 0:4 3:6 6:3
+
+T 9
+L 4 (8-4)
+S -1:0 0:4 3:6 6:3 1:8
+
+T 10
+L 0 (new)
+S -1:0 0:4 3:6 6:3 1:8
+*/
