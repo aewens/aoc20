@@ -657,6 +657,7 @@ func TestSolution14(t *testing.T) {
 
 func TestSolution15(t *testing.T) {
 	expecting1 := []int{436,1,10,27,78,438,1836}
+	//expecting2 := []int{175594,2578,3544142,261214,6895259,18,362}
 	lines := []string{
 		"0,3,6",
 		"1,3,2",
@@ -668,10 +669,16 @@ func TestSolution15(t *testing.T) {
 	}
 
 	for l, line := range lines {
+		Display(0, l)
 		game := ParseMemoryGame(line)
 		part1 := game.Run(2020)
 		if part1 != expecting1[l] {
 			t.Fatalf("Part 1 - Invalid value for %d: %d", l, part1)
 		}
+
+		//part2 := game.Run(30000000)
+		//if part2 != expecting2[l] {
+		//	t.Fatalf("Part 2 - Invalid value for %d: %d", l, part2)
+		//}
 	}
 }
