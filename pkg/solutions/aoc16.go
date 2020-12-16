@@ -24,6 +24,17 @@ type TicketSystem struct {
 	Rules  map[string][]*TicketRule
 	Yours  []int
 	Others [][]int
+	Values [][]int
+	Order  map[int]string
+}
+
+func All(xs []bool) bool {
+	for _, x := range xs {
+		if !x {
+			return false
+		}
+	}
+	return true
 }
 
 func NewTicketSystem() *TicketSystem {
@@ -32,6 +43,8 @@ func NewTicketSystem() *TicketSystem {
 		Rules:  make(map[string][]*TicketRule),
 		Yours:  []int{},
 		Others: [][]int{},
+		Values: [][]int{},
+		Order:  make(map[int]string),
 	}
 }
 
@@ -81,8 +94,10 @@ func (ts *TicketSystem) Parse(line string) {
 }
 
 func (ts *TicketSystem) Check() int {
+	keep := [][]int{}
 	invalids := []int{}
 	for _, ticket := range ts.Others {
+		use := true
 		for _, value := range ticket {
 			valid := false
 			for _, rules := range ts.Rules {
@@ -98,10 +113,118 @@ func (ts *TicketSystem) Check() int {
 			}
 			if !valid {
 				invalids = append(invalids, value)
+				use = false
+			}
+		}
+		if use {
+			keep = append(keep, ticket)
+		}
+	}
+	ts.Others = keep
+	return Sum(invalids)
+}
+
+func (ts *TicketSystem) SetValues() {
+	// Initialize values
+	for i := 0; i < len(ts.Others[0]); i++ {
+		ts.Values = append(ts.Values, []int{})
+	}
+
+	// Populate values
+	for _, ticket := range ts.Others {
+		for v, value := range ticket {
+			ts.Values[v] = append(ts.Values[v], value)
+		}
+	}
+}
+
+func (ts *TicketSystem) Match() {
+	ts.SetValues()
+
+	// Determine which rules are invalid for each index
+	invalids := make(map[int]map[string]bool)
+	for v, values := range ts.Values {
+		_, ok := invalids[v]
+		if !ok {
+			invalids[v] = make(map[string]bool)
+		}
+		for _, value := range values {
+			for name, rules := range ts.Rules {
+				_, skip := invalids[v][name]
+				if skip {
+					continue
+				}
+
+				matched := false
+				for _, rule := range rules {
+					if value >= rule.Lower && value <= rule.Upper {
+						matched = true
+						break
+					}
+				}
+
+				if !matched {
+					invalids[v][name] = true
+				}
 			}
 		}
 	}
-	return Sum(invalids)
+
+	// Keep looping to find which index only matches a single rule
+	assigned := make(map[string]bool)
+	for {
+		if len(ts.Order) == len(ts.Rules) {
+			break
+		}
+
+		valids := make(map[string][]int)
+		for v := range ts.Values {
+			_, set := ts.Order[v]
+			if set {
+				continue
+			}
+
+			for name := range ts.Rules {
+				_, skip := assigned[name]
+				if skip {
+					continue
+				}
+
+				_, invalid := invalids[v][name]
+				if invalid {
+					continue
+				}
+
+				_, ok := valids[name]
+				if !ok {
+					valids[name] = []int{}
+				}
+
+				valids[name] = append(valids[name], v)
+			}
+		}
+
+		for name, indices := range valids {
+			if len(indices) == 1 {
+				assigned[name] = true
+				ts.Order[indices[0]] = name
+			}
+		}
+	}
+}
+
+func (ts *TicketSystem) Departures() int {
+	ts.Match()
+	result := 1
+	prefix := "departure"
+	for index, name := range ts.Order {
+		if len(name) < len(prefix) || name[:len(prefix)] != prefix {
+			continue
+		}
+		value := ts.Yours[index]
+		result = result * value
+	}
+	return result
 }
 
 func Solution16(lines chan string) {
@@ -110,4 +233,5 @@ func Solution16(lines chan string) {
 		ts.Parse(line)
 	}
 	Display(1, ts.Check())
+	Display(2, ts.Departures())
 }

@@ -687,7 +687,7 @@ func TestSolution15(t *testing.T) {
 }
 
 func TestSolution16(t *testing.T) {
-	expecting := []int{71}
+	expecting1 := 71
 	lines := []string{
 		"class: 1-3 or 5-7",
 		"row: 6-11 or 33-44",
@@ -709,7 +709,34 @@ func TestSolution16(t *testing.T) {
 	}
 
 	check := ts.Check()
-	if check != expecting[0] {
-		t.Fatalf("Part 1 - Invalid value:  %d", check)
+	if check != expecting1 {
+		t.Fatalf("Part 1 - Invalid value: %d", check)
+	}
+
+	expecting2 := []string{"row","class","seat"}
+	lines = []string{
+		"class: 0-1 or 4-19",
+		"row: 0-5 or 8-19",
+		"seat: 0-13 or 16-19",
+		"",
+		"your ticket:",
+		"11,12,13",
+		"",
+		"nearby tickets:",
+		"3,9,18",
+		"15,1,5",
+		"5,14,9",
+	}
+
+	ts = NewTicketSystem()
+	for _, line := range lines {
+		ts.Parse(line)
+	}
+	_ = ts.Check()
+	ts.Match()
+	for index, name := range ts.Order {
+		if name != expecting2[index] {
+			t.Fatalf("Part 2 - Invalid value: %d | %s", index, name)
+		}
 	}
 }
