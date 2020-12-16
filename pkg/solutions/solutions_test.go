@@ -656,6 +656,10 @@ func TestSolution14(t *testing.T) {
 }
 
 func TestSolution15(t *testing.T) {
+	/*
+		Part 2 is disabled because it takes a long time to process
+	*/
+
 	expecting1 := []int{436,1,10,27,78,438,1836}
 	//expecting2 := []int{175594,2578,3544142,261214,6895259,18,362}
 	lines := []string{
@@ -669,7 +673,6 @@ func TestSolution15(t *testing.T) {
 	}
 
 	for l, line := range lines {
-		Display(0, l)
 		game := ParseMemoryGame(line)
 		part1 := game.Run(2020)
 		if part1 != expecting1[l] {
@@ -680,5 +683,33 @@ func TestSolution15(t *testing.T) {
 		//if part2 != expecting2[l] {
 		//	t.Fatalf("Part 2 - Invalid value for %d: %d", l, part2)
 		//}
+	}
+}
+
+func TestSolution16(t *testing.T) {
+	expecting := []int{71}
+	lines := []string{
+		"class: 1-3 or 5-7",
+		"row: 6-11 or 33-44",
+		"seat: 13-40 or 45-50",
+		"",
+		"your ticket:",
+		"7,1,14",
+		"",
+		"nearby tickets:",
+		"7,3,47",
+		"40,4,50",
+		"55,2,20",
+		"38,6,12",
+	}
+
+	ts := NewTicketSystem()
+	for _, line := range lines {
+		ts.Parse(line)
+	}
+
+	check := ts.Check()
+	if check != expecting[0] {
+		t.Fatalf("Part 1 - Invalid value:  %d", check)
 	}
 }
