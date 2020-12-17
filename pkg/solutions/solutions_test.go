@@ -740,3 +740,35 @@ func TestSolution16(t *testing.T) {
 		}
 	}
 }
+
+func TestSolution17(t *testing.T) {
+	lines := []string{
+		".#.",
+		"..#",
+		"###",
+	}
+	conway := NewConway3D()
+	for y, line := range lines {
+		conway.Parse(y, line)
+	}
+	//conway.Display()
+	
+	check := Point3D{0,1,-1}
+	next := conway.Search(make(Cubes), check, false)
+	size := len(next)
+
+	if size != 27 {
+		t.Fatalf("Part 1a - Invalid count: %d", size)
+	}
+
+	if !next[check] {
+		t.Fatal("Part 1b - Invalid value")
+	}
+
+
+	expecting := []int{112}
+	count := conway.Run(6)
+	if count != expecting[0] {
+		t.Fatalf("Part 1c - Invalid count: %d", count)
+	}
+}
