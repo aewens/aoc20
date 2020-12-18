@@ -747,14 +747,16 @@ func TestSolution17(t *testing.T) {
 		"..#",
 		"###",
 	}
-	conway := NewConway3D()
+	conway1 := NewConway4D()
+	conway2 := NewConway4D()
 	for y, line := range lines {
-		conway.Parse(y, line)
+		conway1.Parse(y, line)
+		conway2.Parse(y, line)
 	}
 	//conway.Display()
 	
-	check := Point3D{0,1,-1}
-	next := conway.Search(make(Cubes), check, false)
+	check := Point4D{0,1,-1,0}
+	next := conway1.Search(make(Cubes), check, false)
 	size := len(next)
 
 	if size != 27 {
@@ -766,9 +768,22 @@ func TestSolution17(t *testing.T) {
 	}
 
 
-	expecting := []int{112}
-	count := conway.Run(6)
+	expecting := []int{112,848}
+	count := conway1.Run(6)
 	if count != expecting[0] {
 		t.Fatalf("Part 1c - Invalid count: %d", count)
+	}
+
+	check = Point4D{0,1,-1,0}
+	next = conway2.SearchW(make(Cubes), check, false)
+	size = len(next)
+
+	if size != 81 {
+		t.Fatalf("Part 2a - Invalid count: %d", size)
+	}
+
+	count = conway2.RunW(6)
+	if count != expecting[1] {
+		t.Fatalf("Part 2b - Invalid count: %d", count)
 	}
 }
