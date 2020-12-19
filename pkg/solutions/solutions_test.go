@@ -782,8 +782,35 @@ func TestSolution17(t *testing.T) {
 		t.Fatalf("Part 2a - Invalid count: %d", size)
 	}
 
-	count = conway2.RunW(6)
-	if count != expecting[1] {
-		t.Fatalf("Part 2b - Invalid count: %d", count)
+	// Disabled for performance reasons
+
+	//count = conway2.RunW(6)
+	//if count != expecting[1] {
+	//	t.Fatalf("Part 2b - Invalid count: %d", count)
+	//}
+}
+
+func TestSolution18(t *testing.T) {
+	lines := []string{
+		"1 + 2 * 3 + 4 * 5 + 6",
+		"1 + (2 * 3) + (4 * (5 + 6))",
+		"2 * 3 + (4 * 5)",
+		"5 + (8 * 3 + 9 + 3 * 4 * 3)",
+		"5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))",
+		"((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2",
 	}
+	expecting1 := []int{71,51,26,437,12240,13632}
+
+	for l, line := range lines {
+		Display(-99, l)
+		equation := NewEquation()
+		equation.Parse(line)
+		equation.Run()
+		value := equation.Result
+		if value != expecting1[l] {
+			t.Fatalf("Part 1 - Invalid value %d: %d", l, value)
+		}
+	}
+
+	//Display(1, SumEquations(equations))
 }

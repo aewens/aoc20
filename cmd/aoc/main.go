@@ -35,7 +35,7 @@ func parseFlags() *FlagState {
 }
 
 func main() {
-	defer shared.Cleanup()
+	//defer shared.Cleanup()
 	shared.HandleSigterm()
 
 	state := parseFlags()
