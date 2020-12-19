@@ -800,17 +800,24 @@ func TestSolution18(t *testing.T) {
 		"((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2",
 	}
 	expecting1 := []int{71,51,26,437,12240,13632}
+	expecting2 := []int{231,51,46,1445,669060,23340}
 
 	for l, line := range lines {
-		Display(-99, l)
-		equation := NewEquation()
-		equation.Parse(line)
-		equation.Run()
-		value := equation.Result
-		if value != expecting1[l] {
-			t.Fatalf("Part 1 - Invalid value %d: %d", l, value)
+		//Display(-99, l)
+		equation1 := NewEquation()
+		equation1.Parse(line)
+		equation1.Run1()
+		value1 := equation1.Result
+		if value1 != expecting1[l] {
+			t.Fatalf("Part 1 - Invalid value %d: %d", l, value1)
+		}
+
+		equation2 := NewEquation()
+		equation2.Parse(line)
+		equation2.Run2()
+		value2 := equation2.Result
+		if value2 != expecting2[l] {
+			t.Fatalf("Part 2 - Invalid value %d: %d", l, value2)
 		}
 	}
-
-	//Display(1, SumEquations(equations))
 }
