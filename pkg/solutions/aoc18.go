@@ -21,20 +21,21 @@ type EqToken struct {
 	Type  int
 	Value int
 }
+type EqStack []*EqToken
 
 type Equation struct {
 	Result int
 	Level  int
-	Tokens []*EqToken
-	Stack  []*EqToken
+	Tokens EqStack
+	Stack  EqStack
 }
 
 func NewEquation() *Equation {
 	return &Equation{
 		Result: -1,
 		Level:  0,
-		Tokens: []*EqToken{},
-		Stack:  []*EqToken{},
+		Tokens: EqStack{},
+		Stack:  EqStack{},
 	}
 }
 
@@ -61,7 +62,6 @@ func (eq *Equation) Parse(line string) {
 			token.Value = shared.RuneToInt(letter)
 		}
 
-		//Display(-1, token)
 		eq.Tokens = append(eq.Tokens, token)
 	}
 }
@@ -93,7 +93,7 @@ func (eq *Equation) Yank() *EqToken {
 	return token
 }
 
-func (eq *Equation) Apply(stack []*EqToken) int {
+func (eq *Equation) Apply(stack EqStack) int {
 	ops := make(map[int]EqFunc)
 	ops[sumType] = func(a int, b int) int {
 		return a + b
@@ -111,78 +111,41 @@ func (eq *Equation) Apply(stack []*EqToken) int {
 		case numericType:
 			if value == -1 {
 				value = token.Value
-				//Display(-10, token.Value)
 				continue
 			}
-			//Display(-10, token.Value)
 			value = op(value, token.Value)
-			//Display(-20, value)
 		case sumType:
 			op = ops[sumType]
-			//Display(-10, "+")
 		case productType:
 			op = ops[productType]
-			//Display(-10, "*")
 		}
 	}
 	return value
 }
 
-// 1 + (2 * 3) + (4 * (5 + 6))
-// ((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2
 func (eq *Equation) Build() {
 	var result *EqToken
+	var stack EqStack
 
-	level := 0
-	stacks := [][]*EqToken{}
-	op := eq.Yank()
-	Display(-31, op)
-	for len(eq.Stack) > 0 {
-		token := eq.Yank()
-		Display(-31, token)
-		if token.Type == openBracketType {
-			level = level + 1
-			stack := []*EqToken{}
-			stacks = append(stacks, stack)
+	for len(eq.Stack) > 1 {
+		token := eq.Pop()
+		if token.Type == closeBracketType {
+			stack = EqStack{}
 			continue
 		}
 
-		if level > 0 {
-			size := len(stacks)
-			stack := stacks[size-1]
-			if token.Type != closeBracketType {
-				stacks[size-1] = append(stack, token)
-				continue
-			}
-
-			level = level - 1
-			output := &EqToken{
-				Type:  numericType,
-				Value: eq.Apply(stack),
-			}
-
-			stacks = stacks[:size-1]
-			size = len(stacks)
-			Display(-4, []int{level, len(stacks), output.Type, output.Value})
-			if level > 0 && size > 0 {
-				stacks[size-1] = append(stacks[size-1], output)
-			} else {
-				result = output
-				Display(-5, result)
-			}
+		if token.Type != openBracketType {
+			stack = append(EqStack{token}, stack...)
 			continue
 		}
-	}
-	if result == nil || len(stacks) > 0 {
-		Display(-32, result)
-		Display(-33, len(stacks))
+
 		result = &EqToken{
 			Type:  numericType,
-			Value: eq.Apply(stacks[0]),
+			Value: eq.Apply(stack),
 		}
+		break
 	}
-	Display(-6, result)
-	eq.Stack = append(eq.Stack, op, result)
+	eq.Stack = append(eq.Stack, result)
 }
 
 func (eq *Equation) Exec(closing bool) {
@@ -193,25 +156,24 @@ func (eq *Equation) Exec(closing bool) {
 		_ = eq.Pop()
 		return
 	}
-
-	Display(-30, len(eq.Stack))
-	if !closing && len(eq.Stack) > 2 || closing && len(eq.Stack) > 3 {
-		eq.Build()
-	}
 	if closing && len(eq.Stack) == 3 {
 		_ = eq.Pop()
 	}
-	Display(-34, len(eq.Stack))
+
+	if len(eq.Stack) > 2 {
+		eq.Build()
+		if len(eq.Stack) > 2 {
+			return
+		}
+	}
 
 	numeric := eq.Pop()
 	op := eq.Pop()
 
 	switch op.Type {
 	case sumType:
-		Display(-7, "+")
 		eq.Result = eq.Result + numeric.Value
 	case productType:
-		Display(-8, "*")
 		eq.Result = eq.Result * numeric.Value
 	}
 }
@@ -222,7 +184,6 @@ func (eq *Equation) Step() {
 	switch token.Type {
 	case numericType:
 		value := token.Value
-		Display(-1, value)
 		if eq.Result == -1 {
 			eq.Result = value
 			return
@@ -234,13 +195,10 @@ func (eq *Equation) Step() {
 		}
 		eq.Exec(false)
 	case sumType:
-		Display(-1, "+")
 		eq.Push(token)
 	case productType:
-		Display(-1, "*")
 		eq.Push(token)
 	case openBracketType:
-		Display(-1, "(")
 		if eq.Result == -1 {
 			eq.Result = 0
 			eq.Push(&EqToken{
@@ -250,20 +208,16 @@ func (eq *Equation) Step() {
 		eq.Level = eq.Level + 1
 		eq.Push(token)
 	case closeBracketType:
-		Display(-1, ")")
 		eq.Level = eq.Level - 1
 		eq.Push(token)
 		eq.Exec(true)
 	}
-
-	Display(-2, []int{eq.Result,len(eq.Stack)})
 }
 
 func (eq *Equation) Run() {
 	for len(eq.Tokens) > 0 {
 		eq.Step()
 	}
-	Display(-10, "----")
 }
 
 func SumEquations(equations []*Equation) int {
@@ -277,7 +231,6 @@ func SumEquations(equations []*Equation) int {
 func Solution18(lines chan string) {
 	equations := []*Equation{}
 	for line := range lines {
-		Display(0, line)
 		equation := NewEquation()
 		equation.Parse(line)
 		equation.Run()
@@ -287,39 +240,3 @@ func Solution18(lines chan string) {
 
 	Display(1, SumEquations(equations))
 }
-
-/*
-
-((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2
-
-(
-(2+4*9)
-
-(
-54
-*
-(6+9*8+6)
-
-(
-54
-*
-126
-+
-6
-)
-
-6810
-+
-2
-
-6812
-+
-4
-
-6816
-*
-2
-
-13632
-
-*/
