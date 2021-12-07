@@ -4,13 +4,6 @@ import (
 	"testing"
 )
 
-//func Cleanup(t *testing.T) {
-//	r := recover()
-//	if r != nil {
-//		t.Fatal(r)
-//	}
-//}
-
 func TestSolution1(t *testing.T) {
 	transactions := []int{1721, 979, 366, 299, 675, 1456}
 	
@@ -819,5 +812,33 @@ func TestSolution18(t *testing.T) {
 		if value2 != expecting2[l] {
 			t.Fatalf("Part 2 - Invalid value %d: %d", l, value2)
 		}
+	}
+}
+
+func TestSolution19(t *testing.T) {
+	lines := []string{
+		"0: 4 1 5",
+		"1: 2 3 | 3 2",
+		"2: 4 4 | 5 5",
+		"3: 4 5 | 5 4",
+		"4: \"a\"",
+		"5: \"b\"",
+		"",
+		"ababbb",
+		"bababa",
+		"abbbab",
+		"aaabbb",
+		"aaaabbb",
+	}
+	expecting := []int{2}
+
+	ms := NewMessageSystem()
+	for _, line := range lines {
+		ms.PushToken(line)
+	}
+
+	count := ms.Check()
+	if count != expecting[0] {
+		t.Fatalf("Part 1a - Invalid count: %d", count)
 	}
 }
